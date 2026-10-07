@@ -1,0 +1,75 @@
+{
+  "dataset_name": "huawei_ascend_rag_atomic_dataset",
+  "created_at": "2026-10-07T21:12:56.417581+00:00",
+  "tokenizer": "cl100k_base",
+  "strategy": "atomic_table_aware",
+  "chunk_size": 1024,
+  "chunk_overlap": 64,
+  "total_documents": 10,
+  "total_chunks": 4822,
+  "total_tokens": 739509,
+  "total_table_chunks": 737,
+  "total_code_chunks": 0,
+  "documents": {
+    "ATCToolInstructions": {
+      "chunks": 259,
+      "tokens": 45525,
+      "tables": 86,
+      "codes": 0
+    },
+    "ApplicationDevelopmentGuide_MindStudio_": {
+      "chunks": 124,
+      "tokens": 29775,
+      "tables": 10,
+      "codes": 0
+    },
+    "Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000_": {
+      "chunks": 2769,
+      "tokens": 382684,
+      "tables": 467,
+      "codes": 0
+    },
+    "EnvironmentDeploymentGuide": {
+      "chunks": 214,
+      "tokens": 37607,
+      "tables": 12,
+      "codes": 0
+    },
+    "Huawei_Atlas_200_DK_developer_kit_Technical_White_Paper__Model_3000__08": {
+      "chunks": 65,
+      "tokens": 9131,
+      "tables": 15,
+      "codes": 0
+    },
+    "MindStudioInstallationGuideUbuntuX86": {
+      "chunks": 160,
+      "tokens": 23771,
+      "tables": 13,
+      "codes": 0
+    },
+    "TBECustomOperatorDevelopmentGuide_CLI_": {
+      "chunks": 107,
+      "tokens": 24660,
+      "tables": 13,
+      "codes": 0
+    },
+    "TensorFlowNetworkModelPortingandTrainingGuide": {
+      "chunks": 745,
+      "tokens": 118797,
+      "tables": 100,
+      "codes": 0
+    },
+    "UserGuide2020": {
+      "chunks": 156,
+      "tokens": 26191,
+      "tables": 8,
+      "codes": 0
+    },
+    "UserGuide2021": {
+      "chunks": 223,
+      "tokens": 41368,
+      "tables": 13,
+      "codes": 0
+    }
+  }
+}
