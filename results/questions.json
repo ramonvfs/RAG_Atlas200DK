@@ -1,0 +1,164 @@
+[
+  {
+    "id": "q1",
+    "tier": "direct",
+    "question": "What does the --input_fp16_nodes parameter do in the ATC tool?",
+    "must_contain": [
+      "fp16",
+      "input_fp16_nodes"
+    ],
+    "gold_docs": [
+      "ATCToolInstructions"
+    ],
+    "reference": "The --input_fp16_nodes parameter specifies the name of the input node(s) with input data of type FP16 (for example, 'node_name1;node_name2'). It is mutually exclusive with --insert_op_conf.",
+    "expect_refusal": false,
+    "history": []
+  },
+  {
+    "id": "q2",
+    "tier": "direct",
+    "question": "What are the main hardware differences between IT21DMDA and IT21VDMB board versions of the Atlas 200 DK?",
+    "must_contain": [
+      "it21dmda",
+      "it21vdmb",
+      "8",
+      "11"
+    ],
+    "gold_docs": [
+      "Huawei_Atlas_200_DK_developer_kit_Technical_White_Paper__Model_3000__08"
+    ],
+    "reference": "According to Table 1-1 of the White Paper: 1) Power input: IT21DMDA accepts 5 V to 28 V, while IT21VDMB accepts 12 V. 2) MIPI-CSI port: IT21DMDA has a 22-pin port (without cables), while IT21VDMB has a 51-pin port (with cables). 3) Number of GPIOs: IT21DMDA has 8 GPIOs, while IT21VDMB has 11 GPIOs. Providing the GPIO difference (8 vs 11) and MIPI-CSI or power difference is sufficient.",
+    "expect_refusal": false,
+    "history": []
+  },
+  {
+    "id": "q3",
+    "tier": "direct",
+    "question": "What causes the error 'CheckPartitionSpace partition space check failed' during Atlas 200 DK driver upgrade?",
+    "must_contain": [
+      "512",
+      "partition|space|sdcard|sd card"
+    ],
+    "gold_docs": [
+      "EnvironmentDeploymentGuide"
+    ],
+    "reference": "The error occurs because an unallocated space of 512 MB is not reserved on the SD card of the Atlas 200 DK for Driver upgrade (often caused by using an older card creation script). It can be checked with 'fdisk -l' and fixed by resizing the partition (e.g. using GParted on the Ubuntu server to leave 512 MiB of unallocated space).",
+    "expect_refusal": false,
+    "history": []
+  },
+  {
+    "id": "q4",
+    "tier": "direct",
+    "question": "How is the NC1HWC0 5D tensor format structured and what does C0 represent for FP16?",
+    "must_contain": [
+      "16",
+      "c0|nc1hwc0"
+    ],
+    "gold_docs": [
+      "ATCToolInstructions",
+      "TBECustomOperatorDevelopmentGuide_CLI_",
+      "Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000_"
+    ],
+    "reference": "In the 5D tensor format NC1HWC0, N is batch size, H is height, W is width, C0 is the size of the cube / matrix computing unit in the AI Core, and C1 = (C + C0 - 1) / C0. For FP16, C0 is 16 (and for INT8, C0 is 32).",
+    "expect_refusal": false,
+    "history": []
+  },
+  {
+    "id": "q5",
+    "tier": "multi",
+    "question": "Which CSC matrix coefficients are used in AIPP to convert YUV420SP_U8 to RGB888_U8 for JPEG images?",
+    "must_contain": [
+      "matrix_r0c0",
+      "256|298"
+    ],
+    "gold_docs": [
+      "ATCToolInstructions",
+      "Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000_"
+    ],
+    "reference": "In Table 4-1 (YUV420SP_U8 to RGB / RGB888_U8), for JPEG images the CSC matrix coefficients are matrix_r0c0: 256, matrix_r0c1: 0, matrix_r0c2: 359, matrix_r1c0: 256, matrix_r1c1: -88, matrix_r1c2: -183, matrix_r2c0: 256, matrix_r2c1: 454, matrix_r2c2: 0 (with input_bias 0, 128, 128). For BT.601 Narrow, the coefficients are 298, 0, 409, 298, -100, -208, 298, 516, 0. Citing either the JPEG column (256...) or the BT.601 column (298...) from the YUV420SP_U8 to RGB table is acceptable.",
+    "expect_refusal": false,
+    "history": []
+  },
+  {
+    "id": "q6",
+    "tier": "multi",
+    "question": "What is the typical power consumption and power input voltage range of the Atlas 200 DK?",
+    "must_contain": [
+      "12",
+      "20|36|28"
+    ],
+    "gold_docs": [
+      "Huawei_Atlas_200_DK_developer_kit_Technical_White_Paper__Model_3000__08"
+    ],
+    "reference": "According to the White Paper (Sections 3.1 and 4.4): Typical power consumption is 20 W, and the external power supply adapter must be >= 36 W (12 V 3 A configured by default). The power input voltage is 12 V if the PCB is IT21VDMB, and 5 V to 28 V if the PCB is IT21DMDA. Mentioning the 12V / 5V-28V input voltages and either the 20W typical power or >=36W power supply requirement is correct.",
+    "expect_refusal": false,
+    "history": []
+  },
+  {
+    "id": "q7",
+    "tier": "paraphrase",
+    "question": "How do I configure channel mean subtraction and variance normalization in the AIPP configuration file?",
+    "must_contain": [
+      "mean_chn|var_reci_chn|min_chn"
+    ],
+    "gold_docs": [
+      "ATCToolInstructions",
+      "Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000_"
+    ],
+    "reference": "In the AIPP configuration file (aipp_op), channel normalization is configured using mean_chn_0..3 (mean value of each channel), min_chn_0..3 (minimum value of each channel), and var_reci_chn_0..3 (variance / reciprocal factor of each channel), following the rule: pixel_out = (pixel_in - mean_chn - min_chn) * var_reci_chn.",
+    "expect_refusal": false,
+    "history": []
+  },
+  {
+    "id": "q8",
+    "tier": "paraphrase",
+    "question": "What should I do if the Atlas board cannot establish connection to the Ubuntu server via USB?",
+    "must_contain": [
+      "usb",
+      "ip|nic|cable|led|sd"
+    ],
+    "gold_docs": [
+      "EnvironmentDeploymentGuide",
+      "UserGuide2021",
+      "UserGuide2020"
+    ],
+    "reference": "According to the troubleshooting guide (What Do I Do If the Atlas 200 DK Cannot Connect to the Ubuntu Server?): 1) Check SD card preparation logs and ensure LED1/LED2 indicators are normal. 2) Check the USB cable and verify if the virtual USB NIC exists and its IP address (e.g. 192.168.1.x) is configured on the Ubuntu server. 3) Alternatively, try connecting via network cable (NIC mode) or connect via a serial cable (UART) using a debugging tool (e.g. IPOP / PL2303 driver) to inspect boot logs.",
+    "expect_refusal": false,
+    "history": []
+  },
+  {
+    "id": "q9",
+    "tier": "followup",
+    "question": "And what is its value for INT8 data types?",
+    "must_contain": [
+      "32"
+    ],
+    "gold_docs": [
+      "ATCToolInstructions",
+      "TBECustomOperatorDevelopmentGuide_CLI_",
+      "Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000_"
+    ],
+    "reference": "For INT8 data types in the NC1HWC0 5D format, C0 is 32.",
+    "expect_refusal": false,
+    "history": [
+      {
+        "role": "user",
+        "content": "What is the value of C0 for FP16 in the NC1HWC0 5D tensor format?"
+      },
+      {
+        "role": "assistant",
+        "content": "In the NC1HWC0 5D tensor format, C0 represents the size of the cube unit in the AI Core and equals 16 for FP16."
+      }
+    ]
+  },
+  {
+    "id": "q10",
+    "tier": "none",
+    "question": "What is the GPU clock speed of Nvidia RTX 4090?",
+    "must_contain": [],
+    "gold_docs": [],
+    "reference": "Out of domain question. The answer must state that the information is not provided in the context.",
+    "expect_refusal": true,
+    "history": []
+  }
+]
