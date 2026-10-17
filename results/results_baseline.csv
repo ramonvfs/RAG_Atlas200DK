@@ -1,0 +1,327 @@
+judge_reason,label,run,id,tier,question,question_used,queries,retrieved,gold_docs,gold_recall,ctx_has_keys,answer,correct,refused,llm_calls,embed_calls,latency_s
+accurately describes the purpose and usage of the --input_fp16_nodes parameter,baseline,1,q1,direct,What does the --input_fp16_nodes parameter do in the ATC tool?,What does the --input_fp16_nodes parameter do in the ATC tool?,"[""What does the --input_fp16_nodes parameter do in the ATC tool?""]",ATCToolInstructions_0004(0.335) | ATCToolInstructions_0002(0.364) | ATCToolInstructions_0003(0.350) | ATCToolInstructions_0054(0.353),ATCToolInstructions,1.0,True,"The `--input_fp16_nodes` parameter in the ATC tool is used to specify the name of an input node that has input data of type FP16 (half-precision floating point). This parameter is mutually exclusive with `--insert_op_conf`.
+
+When this parameter is set, it indicates that there is an input node in the original model that provides data in FP16 format, and this node needs to be handled specially during the conversion process. Specifically:
+
+- You should enclose the name of each node in double quotation marks ("""") and separate the nodes by semicolons (;).
+- For example, the command might look like this: `atc --model=$HOME/test/resnet18.prototxt --weight=$HOME/test/resnet18.caffemodel --framework=0 --output=$HOME/test/out/caffe_resnet50 --input_fp16_nodes=""data""`
+
+This parameter is particularly useful when dealing with models that have specific input nodes providing FP16 data, ensuring that these nodes are correctly processed and that the input data format is maintained during the conversion to the `.om` model format.",True,False,1,1,2.0
+accurately summarizes the main hardware differences,baseline,1,q2,direct,What are the main hardware differences between IT21DMDA and IT21VDMB board versions of the Atlas 200 DK?,What are the main hardware differences between IT21DMDA and IT21VDMB board versions of the Atlas 200 DK?,"[""What are the main hardware differences between IT21DMDA and IT21VDMB board versions of the Atlas 200 DK?""]",Huawei_Atlas_200_DK_developer_kit_Technical_White_Paper__Model_3000__08_0003(0.299) | UserGuide2021_0043(0.312) | Huawei_Atlas_200_DK_developer_kit_Technical_White_Paper__Model_3000__08_0005(0.318) | EnvironmentDeploymentGuide_0043(0.324),Huawei_Atlas_200_DK_developer_kit_Technical_White_Paper__Model_3000__08,1.0,True,"The main hardware differences between the IT21DMDA (old PCB) and IT21VDMB (new PCB) versions of the Atlas 200 DK are summarized as follows:
+
+- **Power Input**:
+  - IT21DMDA: Supports a power input range of 5 V to 28 V.
+  - IT21VDMB: Uses a 12 V power input.
+
+- **MIPI-CSI Port**:
+  - IT21DMDA: Equipped with a 22-pin MIPI-CSI port, but without cables.
+  - IT21VDMB: Features a 51-pin MIPI-CSI port, and the port comes with cables.
+
+- **Number of GPIOs**:
+  - IT21DMDA: Has 8 GPIOs.
+  - IT21VDMB: Offers 11 GPIOs.
+
+These differences reflect improvements and enhancements in the newer IT21VDMB version of the Atlas 200 DK, particularly in terms of power requirements and connectivity options.",True,False,1,1,1.79
+Accurately describes the issue and provides a detailed solution that aligns with the reference.,baseline,1,q3,direct,What causes the error 'CheckPartitionSpace partition space check failed' during Atlas 200 DK driver upgrade?,What causes the error 'CheckPartitionSpace partition space check failed' during Atlas 200 DK driver upgrade?,"[""What causes the error 'CheckPartitionSpace partition space check failed' during Atlas 200 DK driver upgrade?""]",EnvironmentDeploymentGuide_0066(0.145) | EnvironmentDeploymentGuide_0040(0.225) | EnvironmentDeploymentGuide_0060(0.240) | EnvironmentDeploymentGuide_0039(0.281),EnvironmentDeploymentGuide,1.0,True,"The error 'CheckPartitionSpace partition space check failed' during Atlas 200 DK driver upgrade typically indicates that there is insufficient unallocated space of 512 MB reserved on the SD card. This issue can be caused by using an old card creation script that did not allocate enough unallocated space.
+
+To resolve this, you need to ensure that the SD card has at least 512 MB of unallocated space. Here are the steps to address this issue:
+
+1. **Check the Current Partition Space:**
+   - Connect the SD card to the Ubuntu server over the USB port.
+   - Run the `fdisk -l` command as the root user to check the current partition space.
+     ```sh
+     fdisk -l
+     ```
+   - If the output shows:
+     - Available sectors: 62,333,952
+     - Allocated sectors: 61,285,375
+     - Unallocated space: 512 MB (Calculated as: (62333952 - 61285375) x 512/1024/1024)
+       - This indicates sufficient unallocated space.
+     - Or, if the output shows:
+     - Available sectors: 6,233,952
+     - Allocated sectors: 6,233,951
+       - This indicates insufficient unallocated space.
+
+2. **Resize the Partition:**
+   - If the unallocated space is insufficient, you need to resize the partition to create the required unallocated space.
+   - Use a card reader to insert the SD card and connect it to the Ubuntu server over the USB port.
+   - Alternatively, if a card reader is not available, place a jumper cap or wire over pins 16 and 18 on the Atlas 200 DK (power off the device first).
+   - Run the following commands to install and start the GParted tool:
+     ```sh
+     apt-get install gparted
+     gparted
+     ```
+   - Switch to the corresponding device (SD card).
+   - Unmount the partition:
+     - Right-click /dev/sdb3 and choose Unmount.
+   - Resize the partition:
+     - Ensure the Unused space of the last partition is greater than 512 MB.
+     - If the Unused space is smaller, delete unnecessary files from the /home/HwHiAiUser directory on the Atlas 200 DK.
+     - Select the last partition /dev/sdb3 and click the partition resizing icon.
+     - Set Free space following (MiB) to 512 and Align to to MiB, then click Resize/Move.
+   - After saving the changes, reboot the Atlas 200 DK and try the driver upgrade again.
+
+By following these steps, you should be able to resolve the 'CheckPartitionSpace partition space check failed' error during the driver upgrade process.",True,False,1,1,4.59
+"The answer correctly describes the structure of the NC1HWC0 tensor format and accurately states that C0 is 16 for FP16, aligning with the reference.",baseline,1,q4,direct,How is the NC1HWC0 5D tensor format structured and what does C0 represent for FP16?,How is the NC1HWC0 5D tensor format structured and what does C0 represent for FP16?,"[""How is the NC1HWC0 5D tensor format structured and what does C0 represent for FP16?""]",Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000__0752(0.270) | Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000__0751(0.338) | ATCToolInstructions_0034(0.345) | Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000__0123(0.347),ATCToolInstructions;TBECustomOperatorDevelopmentGuide_CLI_;Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000_,0.6666666666666666,True,"The NC1HWC0 5D tensor format is structured as follows:
+
+- N: Batch size
+- C1: Number of feature maps, which is derived from the original C dimension by dividing it by C0: \( C1 = \left\lceil \frac{C}{C0} \right\rceil \)
+- H: Height of the feature map
+- W: Width of the feature map
+- C0: The size of the matrix computing unit in AI Core, which is equal to 16 for the FP16 type.
+
+For FP16, C0 is 16. If the division of C by C0 does not result in an integer, the last data segment is padded to ensure alignment with C0. This means that the C1 dimension is calculated as \( C1 = \left\lceil \frac{C}{16} \right\rceil \), ensuring that the data is stored consecutively in memory.",True,False,1,1,2.02
+"The answer incorrectly includes coefficients for BT-709NARROW, which are not relevant to the question about JPEG images.",baseline,1,q5,multi,Which CSC matrix coefficients are used in AIPP to convert YUV420SP_U8 to RGB888_U8 for JPEG images?,Which CSC matrix coefficients are used in AIPP to convert YUV420SP_U8 to RGB888_U8 for JPEG images?,"[""Which CSC matrix coefficients are used in AIPP to convert YUV420SP_U8 to RGB888_U8 for JPEG images?""]",Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000__0056(0.164) | ATCToolInstructions_0015(0.207) | Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000__0057(0.229) | Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000__0051(0.245),ATCToolInstructions;Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000_,1.0,True,"For JPEG images, the CSC matrix coefficients used in AIPP to convert YUV420SP_U8 to RGB888_U8 are as follows:
+
+For BT-601NARROW:
+```
+matrix_r0c0 : 256
+matrix_r0c1 : 0
+matrix_r0c2 : 359
+matrix_r1c0 : 256
+matrix_r1c1 : -88
+matrix_r1c2 : -183
+matrix_r2c0 : 256
+matrix_r2c1 : 454
+matrix_r2c2 : 0
+```
+
+For BT-709NARROW:
+```
+matrix_r0c0 : 298
+matrix_r0c1 : 0
+matrix_r0c2 : 409
+matrix_r1c0 : 298
+matrix_r1c1 : -100
+matrix_r1c2 : -208
+matrix_r2c0 : 298
+matrix_r2c1 : 516
+matrix_r2c2 : 0
+```
+
+For BT-709NARROW:
+```
+matrix_r0c0 : 298
+matrix_r0c1 : 0
+matrix_r0c2 : 459
+matrix_r1c0 : 298
+matrix_r1c1 : -55
+matrix_r1c2 : -136
+matrix_r2c0 : 298
+matrix_r2c1 : 541
+matrix_r2c2 : 0
+```
+
+These coefficients are provided in the table for YUV420SP_U8 to RGB888_U8 conversion within the context of JPEG images.",False,False,1,1,2.92
+accurately answers the question with correct power consumption and voltage range,baseline,1,q6,multi,What is the typical power consumption and power input voltage range of the Atlas 200 DK?,What is the typical power consumption and power input voltage range of the Atlas 200 DK?,"[""What is the typical power consumption and power input voltage range of the Atlas 200 DK?""]",Huawei_Atlas_200_DK_developer_kit_Technical_White_Paper__Model_3000__08_0013(0.258) | UserGuide2021_0043(0.250) | EnvironmentDeploymentGuide_0043(0.253) | UserGuide2020_0025(0.275),Huawei_Atlas_200_DK_developer_kit_Technical_White_Paper__Model_3000__08,1.0,True,"Based on the provided context, the typical power consumption of the Atlas 200 DK developer kit (model 3000) is equal to or higher than 36 W. The power input voltage range is as follows:
+- If the PCB is IT21VDMB, the input voltage is 12 V.
+- If the PCB is IT21DMDA, the input voltage is 5 V to 28 V.
+
+Therefore, the power input voltage range for the Atlas 200 DK is 5 V to 28 V, and the typical power consumption is at least 36 W.",True,False,1,1,1.55
+accurately describes the configuration parameters without contradiction,baseline,1,q7,paraphrase,How do I configure channel mean subtraction and variance normalization in the AIPP configuration file?,How do I configure channel mean subtraction and variance normalization in the AIPP configuration file?,"[""How do I configure channel mean subtraction and variance normalization in the AIPP configuration file?""]",ATCToolInstructions_0014(0.269) | Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000__0055(0.291) | Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000__0189(0.292) | ATCToolInstructions_0029(0.323),ATCToolInstructions;Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000_,1.0,True,"To configure channel mean subtraction and variance normalization in the AIPP configuration file, you need to set the following parameters:
+
+- `mean_chn_0`, `mean_chn_1`, `mean_chn_2`, and `mean_chn_3` for the mean value of each channel.
+- `var_reci_chn_0`, `var_reci_chn_1`, `var_reci_chn_2`, and `var_reci_chn_3` for the reciprocal of the variance of each channel.
+
+For example, based on the provided configuration template, you can set these parameters as follows:
+
+```plaintext
+mean_chn_0: 125
+mean_chn_1: 125
+mean_chn_2: 125
+var_reci_chn_0: 0.0039
+var_reci_chn_1: 0.0039
+var_reci_chn_2: 0.0039
+```
+
+This configuration applies to both static and dynamic AIPP modes, where the mean value is subtracted from the input pixel values, and the result is multiplied by the reciprocal of the variance to normalize the data.",True,False,1,1,2.48
+Comprehensive and accurate steps provided.,baseline,1,q8,paraphrase,What should I do if the Atlas board cannot establish connection to the Ubuntu server via USB?,What should I do if the Atlas board cannot establish connection to the Ubuntu server via USB?,"[""What should I do if the Atlas board cannot establish connection to the Ubuntu server via USB?""]",EnvironmentDeploymentGuide_0063(0.202) | UserGuide2021_0067(0.204) | UserGuide2020_0016(0.260) | UserGuide2021_0019(0.233),EnvironmentDeploymentGuide;UserGuide2021;UserGuide2020,1.0,True,"To troubleshoot the issue of the Atlas 200 DK board not establishing a connection to the Ubuntu server via USB, follow these steps:
+
+### Step 1: Check the SD Card
+Ensure that the SD card was made correctly and successfully. You can check the `sd_card_making_log` file in the directory where the card preparation script is located to verify the card creation process. If the card was not created successfully, try creating it again according to the instructions in 4.1.1 Creating an SD Card.
+
+### Step 2: Power On and Check LED Indicators
+1. Insert the SD card into the Atlas 200 DK and power on the board.
+2. Observe the states of LED1 and LED2 indicators:
+   - If both LED1 and LED2 are on after the Atlas 200 DK is started, proceed to the next step.
+   - If either LED1 or LED2 is not on after 15 minutes, refer to the system software installation logs and Atlas 200 DK startup logs for troubleshooting.
+
+### Step 3: Connect the Atlas 200 DK to the Ubuntu Server
+1. Connect the Ubuntu server to the Atlas 200 DK in USB mode.
+2. Check the USB network cable to ensure that both ends are properly connected.
+3. If the virtual USB NIC is still not identified on the Ubuntu server, connect the Ubuntu server to the Atlas 200 DK in NIC mode.
+
+### Step 4: Use Serial Port Connection
+If the Ubuntu server fails to connect to the Atlas 200 DK in either USB or NIC mode, follow these steps:
+1. Connect the AI accelerator module of the Atlas 200 DK to the Ubuntu server over a serial cable (refer to 9.4 Connecting the Atlas 200 DK over a Serial Port).
+2. Install the network debugging tool and USB-to-serial driver on the Ubuntu server:
+   - Recommended network debugging tool: IPOP
+   - USB-to-serial driver: PL2303 driver
+3. Start the network project debugging tool, for example, IPOP. The serial port window is displayed.
+4. In the serial port window, click the Terminal tab page.
+5. On the menu bar, click to open the Connect List dialog box.
+6. Configure the connection:
+   - ConnName: a user-defined connection name
+   - Type: COMX (choose the appropriate COM port based on the device manager)
+   - Baud rate: 115200
+7. Click OK.
+8. Power on the Atlas 200 DK and view the boot information in the COM connection window of the IPOP tool.
+9. Save the startup logs to the installation directory of the IPOP tool.
+
+### Step 5: Post for Support
+If the issue persists, post your problem on the Ascend Forum and upload the startup log file as an attachment. Huawei engineers will provide technical support.
+
+By following these steps, you should be able to diagnose and resolve the issue of the Atlas 200 DK not establishing a connection to the Ubuntu server via USB.",True,False,1,1,5.45
+The answer does not address the specific value of C0 for INT8 data types.,baseline,1,q9,followup,And what is its value for INT8 data types?,And what is its value for INT8 data types?,"[""And what is its value for INT8 data types?""]",Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000__0720(0.373) | Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000__0719(0.373) | Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000__0717(0.368) | Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000__0730(0.365),ATCToolInstructions;TBECustomOperatorDevelopmentGuide_CLI_;Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000_,0.3333333333333333,True,"For the `te.lang.cce.vmax(lhs, rhs)`, `te.lang.cce.vmin(lhs, rhs)`, and `te.lang.cce.vsub(lhs, rhs)` functions, the data types int8 and uint8 are converted to float16 according to the documentation. There is no specific mention of a return value for INT8 data types in the provided API references. Therefore, I cannot provide a specific value for INT8 data types based on the given information.
+
+Similarly, for `te.lang.cce.vrelu(raw_tensor)`, the operation is performed on float16 data types, and int8, uint8, int32, and float32 data types are converted to float16. There is no direct support for INT8 data types in this API.
+
+In summary, the APIs do not directly support INT8 data types, and any INT8 data types are converted to float16 before processing.",False,False,1,1,1.69
+Correctly refused out-of-domain question based on context.,baseline,1,q10,none,What is the GPU clock speed of Nvidia RTX 4090?,What is the GPU clock speed of Nvidia RTX 4090?,"[""What is the GPU clock speed of Nvidia RTX 4090?""]",Huawei_Atlas_200_DK_developer_kit_Technical_White_Paper__Model_3000__08_0006(0.513) | Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000__0489(0.452) | Huawei_Atlas_200_DK_developer_kit_Technical_White_Paper__Model_3000__08_0011(0.350) | Huawei_Atlas_200_DK_developer_kit_Technical_White_Paper__Model_3000__08_0019(0.452),,,,"I do not have sufficient information about the GPU clock speed of Nvidia RTX 4090 from the provided context. The documents focus on the Huawei Atlas 200 DK and its performance specifications, USB and GPIO port details, and DVPP API reference, but they do not contain any information related to Nvidia RTX 4090 GPU specifications.",True,True,1,1,0.88
+accurately explains the issue and provides a valid solution,baseline,1,q11,direct,Why does DMalloc return error code 16847020 (HIAI_GRAPH_MEMORY_POOL_STOPPED) in a single-process multi-graph scenario?,Why does DMalloc return error code 16847020 (HIAI_GRAPH_MEMORY_POOL_STOPPED) in a single-process multi-graph scenario?,"[""Why does DMalloc return error code 16847020 (HIAI_GRAPH_MEMORY_POOL_STOPPED) in a single-process multi-graph scenario?""]",ApplicationDevelopmentGuide_MindStudio__0056(0.130) | Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000__0438(0.206) | Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000__0441(0.258) | Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000__0435(0.228),ApplicationDevelopmentGuide_MindStudio_,1.0,True,"In a single-process, multi-graph scenario, DMalloc returns the error code 16847020 (HIAI_GRAPH_MEMORY_POOL_STOPPED) because the memory pool is stopped after the first graph is destroyed. This occurs because graphs within the same process share a single memory pool. When the first graph is destroyed, its memory pool is also stopped. The second graph then attempts to allocate memory from a stopped pool, leading to the DMalloc failure with the error code HIAI_GRAPH_MEMORY_POOL_STOPPED.
+
+To handle this issue, it is advised not to destroy the first graph if an exception occurs. Instead, a retry mechanism can be implemented for the error code HIAI_GRAPH_MEMORY_POOL_STOPPED. For example, the following code snippet demonstrates a retry mechanism:
+
+```cpp
+int cnt = 0;
+while (cnt < 5) {
+    if (HIAI_GRAPH_MEMORY_POOL_STOPPED == HIAI_DMalloc(dataSize, timeOut, flag)) {
+        usleep(10000);  // Sleep for 10 milliseconds
+        cnt++;
+    } else {
+        break;
+    }
+}
+```
+
+This retry mechanism allows the application to attempt memory allocation multiple times before failing, giving the memory pool a chance to be restored.",True,False,1,1,2.3
+misses the core technical answer,baseline,1,q12,direct,"What are the default memory allocations for weights and feature maps during TensorFlow training on Ascend, and which parameters adjust them?","What are the default memory allocations for weights and feature maps during TensorFlow training on Ascend, and which parameters adjust them?","[""What are the default memory allocations for weights and feature maps during TensorFlow training on Ascend, and which parameters adjust them?""]",TensorFlowNetworkModelPortingandTrainingGuide_0166(0.264) | TensorFlowNetworkModelPortingandTrainingGuide_0081(0.239) | ATCToolInstructions_0002(0.350) | TensorFlowNetworkModelPortingandTrainingGuide_0018(0.243),TensorFlowNetworkModelPortingandTrainingGuide,1.0,False,"Based on the provided context, there is no specific information about the default memory allocations for weights and feature maps during TensorFlow training on Ascend, nor are there parameters mentioned that directly adjust these allocations. 
+
+However, the context does provide some relevant details:
+
+1. **Static Memory Allocation Mode**: The document mentions `GE_USE_STATIC_MEMORY` which can be set to enable static memory allocation for network execution. When enabled, the default allocation is 31 GB, determined by the sum of `graph_memory_max_size` and `variable_memory_max_size`. This can be set with:
+   ```sh
+   export GE_USE_STATIC_MEMORY=1
+   ```
+
+2. **Dynamic Memory Allocation Mode**: In dynamic memory allocation mode, the allocation is within the sum of `graph_memory_max_size` and `variable_memory_max_size`.
+
+3. **Loss Scaling**: The context mentions `loss_scale` which is used to avoid issues with gradient explosion or vanishing during training. This is set via:
+   ```python
+   flags_core.set_defaults(loss_scale='512')
+   ```
+
+These are the closest parameters related to memory management and training settings in the provided context, but they do not directly specify the default memory allocations for weights and feature maps. For precise details on default memory allocations and specific parameters to adjust them, you would need to refer to the official Huawei Ascend documentation or specific TensorFlow configuration files tailored for Ascend training.",False,False,1,1,2.48
+The answer aligns with the reference but includes additional inferences not directly stated in the reference.,baseline,1,q13,direct,"In the TBE operator description JSON file inside kernel_meta, what do the magic values RT_DEV_BINARY_MAGIC_ELF and RT_DEV_BINARY_MAGIC_ELF_AICPU indicate?","In the TBE operator description JSON file inside kernel_meta, what do the magic values RT_DEV_BINARY_MAGIC_ELF and RT_DEV_BINARY_MAGIC_ELF_AICPU indicate?","[""In the TBE operator description JSON file inside kernel_meta, what do the magic values RT_DEV_BINARY_MAGIC_ELF and RT_DEV_BINARY_MAGIC_ELF_AICPU indicate?""]",TBECustomOperatorDevelopmentGuide_CLI__0019(0.328) | TBECustomOperatorDevelopmentGuide_CLI__0032(0.341) | TBECustomOperatorDevelopmentGuide_CLI__0034(0.322) | TBECustomOperatorDevelopmentGuide_CLI__0010(0.287),TBECustomOperatorDevelopmentGuide_CLI_;Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000_,0.5,True,"The context provided does not explicitly detail the meanings of the magic values `RT_DEV_BINARY_MAGIC_ELF` and `RT_DEV_BINARY_MAGIC_ELF_AICPU` within the TBE operator description JSON file. These magic values are typically used to indicate the type of binary file (e.g., ELF for AI Core, AICPU for AI CPU) but are not further explained in the given documents.
+
+Based on common practice in embedded systems and Huawei's Ascend series, these magic values likely indicate the binary format or target device for the TBE operator. Specifically:
+
+- `RT_DEV_BINARY_MAGIC_ELF` might indicate that the binary is intended for execution on the AI Core (Ascend 310).
+- `RT_DEV_BINARY_MAGIC_ELF_AICPU` might indicate that the binary is intended for execution on the AI CPU.
+
+However, without direct information from the provided documents, this is an inference based on typical naming conventions. For precise definitions and usage, you should refer to Huawei's official documentation or developer forums.",True,False,1,1,1.97
+Accurate and aligned with the reference.,baseline,1,q14,direct,What are the default port numbers and initial login usernames for the Mind Studio GUI and the Profiling tool?,What are the default port numbers and initial login usernames for the Mind Studio GUI and the Profiling tool?,"[""What are the default port numbers and initial login usernames for the Mind Studio GUI and the Profiling tool?""]",MindStudioInstallationGuideUbuntuX86_0020(0.288) | MindStudioInstallationGuideUbuntuX86_0021(0.268) | Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000__0773(0.306) | MindStudioInstallationGuideUbuntuX86_0006(0.334),MindStudioInstallationGuideUbuntuX86,1.0,True,"The default port number for the Mind Studio GUI is 8888, and for the Profiling tool, it is 8099. The initial login username for the Mind Studio GUI is `MindStudioAdmin`, which cannot be changed. For the Profiling tool, the initial login username is `msvpadmin`.",True,False,1,1,1.05
+The candidate answer incorrectly calculates the buffer size and does not align with the reference.,baseline,1,q15,multi,"How is the required output memory size calculated for a 300 x 300 YUV420SP_UV image in DVPP, and which Matrix APIs must be used to allocate and free this memory?","How is the required output memory size calculated for a 300 x 300 YUV420SP_UV image in DVPP, and which Matrix APIs must be used to allocate and free this memory?","[""How is the required output memory size calculated for a 300 x 300 YUV420SP_UV image in DVPP, and which Matrix APIs must be used to allocate and free this memory?""]",Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000__0492(0.208) | ApplicationDevelopmentGuide_MindStudio__0021(0.239) | Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000__0584(0.240) | Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000__0217(0.189),ApplicationDevelopmentGuide_MindStudio_;Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000_,1.0,False,"For a 300 x 300 YUV420SP_UV image in DVPP, the required output memory size can be calculated as follows:
+
+1. **Width and Height Alignment**: 
+   - The width must be rounded up to the nearest multiple of 16 pixels. Therefore, 300 is rounded up to 304.
+   - The height must be rounded up to the nearest multiple of 2 pixels. Therefore, 300 remains 300.
+
+2. **Buffer Size Calculation**:
+   - The YUV420SP format consists of three planes: Y, U, and V.
+   - The total buffer size is calculated as:
+     \[
+     \text{Buffer Size} = \text{Width} \times \text{Height} + \left(\frac{\text{Width}}{2} \times \frac{\text{Height}}{2}\right) \times 2
+     \]
+   - Substituting the values:
+     \[
+     \text{Buffer Size} = 304 \times 300 + \left(\frac{304}{2} \times \frac{300}{2}\right) \times 2
+     \]
+     \[
+     \text{Buffer Size} = 91200 + (152 \times 150) \times 2
+     \]
+     \[
+     \text{Buffer Size} = 91200 + 45600
+     \]
+     \[
+     \text{Buffer Size} = 136800 \text{ bytes}
+     \]
+
+To allocate and free the memory for this image, the following Matrix APIs must be used:
+
+- **Memory Allocation**:
+  - Use `HIAI_DVPP_DMalloc` to allocate the required memory. Ensure that the allocated memory meets the DVPP requirement, with the start address being 128-byte aligned.
+  - Example usage:
+    ```cpp
+    uint8_t* outputBuffer = nullptr;
+    size_t bufferSize = 136800; // Calculated buffer size
+    HIAI_DVPP_DMalloc(&outputBuffer, bufferSize);
+    ```
+
+- **Memory Deallocation**:
+  - Use `HIAI_DVPP_DFree` to free the allocated memory.
+  - Example usage:
+    ```cpp
+    HIAI_DVPP_DFree(outputBuffer);
+    ```
+
+These steps ensure that the memory is correctly allocated and managed according to the DVPP requirements.",False,False,1,1,4.47
+accurately answers the question and aligns with the reference,baseline,1,q16,multi,"Which pins on the Atlas 200 DK must be connected with a jumper cap to prepare an SD card without a card reader, and what are the default IP addresses configured in make_sd_card.py for the USB NIC and network port?","Which pins on the Atlas 200 DK must be connected with a jumper cap to prepare an SD card without a card reader, and what are the default IP addresses configured in make_sd_card.py for the USB NIC and network port?","[""Which pins on the Atlas 200 DK must be connected with a jumper cap to prepare an SD card without a card reader, and what are the default IP addresses configured in make_sd_card.py for the USB NIC and network port?""]",UserGuide2021_0015(0.156) | EnvironmentDeploymentGuide_0015(0.162) | UserGuide2020_0013(0.184) | EnvironmentDeploymentGuide_0017(0.350),EnvironmentDeploymentGuide;UserGuide2020;UserGuide2021,1.0,True,"To prepare an SD card without a card reader on the Atlas 200 DK, you must connect the jumper cap or jumper wire over pin 16 and pin 18 as described in the hardware preparation steps.
+
+The default IP addresses configured in `make_sd_card.py` for the USB NIC and network port are:
+- `NETWORK_CARD_DEFAULT_IP`: 192.168.0.2
+- `USB_CARD_DEFAULT_IP`: 192.168.1.2
+
+These default IP addresses can be modified in the `make_sd_card.py` script if needed.",True,False,1,1,1.41
+accurately aligns with the reference,baseline,1,q17,paraphrase,How should VDEC engines and thread counts be configured in the graph file to decode multiple video streams concurrently without frame order issues?,How should VDEC engines and thread counts be configured in the graph file to decode multiple video streams concurrently without frame order issues?,"[""How should VDEC engines and thread counts be configured in the graph file to decode multiple video streams concurrently without frame order issues?""]",ApplicationDevelopmentGuide_MindStudio__0051(0.168) | Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000__0490(0.235) | Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000__0524(0.282) | ApplicationDevelopmentGuide_MindStudio__0052(0.202),ApplicationDevelopmentGuide_MindStudio_,1.0,True,"To configure VDEC engines and thread counts in the graph file for concurrently decoding multiple video streams without frame order issues, follow these configurations:
+
+1. **Configure Multiple VDEC Engines in the Graph Segment:**
+   - In the graph configuration file, specify multiple VDEC engines in the graph segment. Each video stream should correspond to one VDEC engine.
+
+2. **Set `thread_num` to 1 for Each VDEC Engine:**
+   - In the VDEC engine segment of the graph configuration file, set `thread_num` to 1 for each VDEC engine. This ensures that each VDEC engine operates in a single-threaded mode, maintaining the data sequence of each video stream.
+
+3. **Ensure One VDEC Engine Per Video Stream:**
+   - Ensure that one VDEC engine is dedicated to one video stream to maintain proper data sequence and avoid frame order issues.
+
+4. **Limitations:**
+   - One graph (one thread) can correspond to a maximum of 16 video streams. Therefore, if you have more than 16 video streams, you need to increase the number of graphs or engines accordingly.
+
+Example Configuration in the Graph File:
+```plaintext
+[graph]
+# Example for 4 video streams
+num_engines = 4
+
+[engine]
+# Configuration for each VDEC engine
+engine_id = 0
+type = VDEC
+thread_num = 1
+```
+
+Repeat the `engine` configuration block for each VDEC engine, ensuring that the `engine_id` and `thread_num` are correctly set for each video stream.
+
+By following these configurations, you can ensure that each video stream is decoded by a dedicated VDEC engine in a single-threaded manner, maintaining the data sequence and avoiding frame order issues during multi-channel video decoding.",True,False,1,1,3.37
+"The candidate answer includes all the key steps from the reference, such as installing numactl, using numactl to bind CPU cores, and setting environment variables.",baseline,1,q18,paraphrase,How can I speed up slow offline model conversion when running on an Arm (AArch64) server?,How can I speed up slow offline model conversion when running on an Arm (AArch64) server?,"[""How can I speed up slow offline model conversion when running on an Arm (AArch64) server?""]",Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000__0112(0.222) | ATCToolInstructions_0060(0.230) | Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000__0050(0.302) | ATCToolInstructions_0006(0.291),ATCToolInstructions;Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000_,1.0,True,"To speed up slow offline model conversion when running on an Arm (AArch64) server, you can follow these steps:
+
+1. **Ensure Network Connection**: Ensure the server is connected to the network to facilitate the installation of required tools.
+2. **Install numactl Tool**: As the ATC installation user, run the following command to install the `numactl` tool:
+   ```bash
+   yum -y install numactl
+   ```
+3. **Specify CPU Cores for Model Conversion**: Use the `numactl` tool to specify CPU cores 16-31 for model conversion:
+   ```bash
+   numactl -C 16-31 --localalloc <args>
+   ```
+   Replace `<args>` with the actual ATC model conversion command.
+
+4. **Optimize Environment Variables**: Set the environment variables to optimize the model conversion process. For example, you can enable parallel operator building by setting the `TE_PARALLEL_COMPILER` environment variable:
+   ```bash
+   export TE_PARALLEL_COMPILER=xx
+   ```
+   Replace `xx` with the number of parallel processes you want to use. It is recommended to set this value to 80% of the host CPU core count for single-chip scenarios.
+
+By following these steps, you can improve the performance of model conversion on an Arm (AArch64) server.",True,False,1,1,2.45
+Accurately states the boardid value for VD version.,baseline,1,q19,followup,And what value indicates that it is a VD version?,And what value indicates that it is a VD version?,"[""And what value indicates that it is a VD version?""]",Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000__0606(0.359) | EnvironmentDeploymentGuide_0049(0.350) | Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000__0087(0.361) | UserGuide2021_0049(0.350),EnvironmentDeploymentGuide;UserGuide2020;UserGuide2021,0.6666666666666666,True,The value that indicates the Atlas 200 AI accelerator module is a VD version is `boardid = 004`.,True,False,1,1,0.59
+Correctly refused out-of-domain question based on context.,baseline,1,q20,none,How many Tensor Cores does the Nvidia H100 Hopper GPU have?,How many Tensor Cores does the Nvidia H100 Hopper GPU have?,"[""How many Tensor Cores does the Nvidia H100 Hopper GPU have?""]",TensorFlowNetworkModelPortingandTrainingGuide_0174(0.360) | Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000__0730(0.348) | TensorFlowNetworkModelPortingandTrainingGuide_0034(0.350) | Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000__0720(0.353),,,,"I do not have sufficient information about the Nvidia H100 Hopper GPU in the provided context. The documents focus on Huawei's Ascend AI processors and the CANN/DDK software ecosystem, and do not contain details about Nvidia GPU specifications.",True,True,1,1,0.71

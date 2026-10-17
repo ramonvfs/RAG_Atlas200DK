@@ -160,5 +160,173 @@
     "reference": "Out of domain question. The answer must state that the information is not provided in the context.",
     "expect_refusal": true,
     "history": []
+  },
+  {
+    "id": "q11",
+    "tier": "direct",
+    "question": "Why does DMalloc return error code 16847020 (HIAI_GRAPH_MEMORY_POOL_STOPPED) in a single-process multi-graph scenario?",
+    "must_contain": [
+      "first graph",
+      "memory pool"
+    ],
+    "gold_docs": [
+      "ApplicationDevelopmentGuide_MindStudio_"
+    ],
+    "reference": "Graphs of the same process on the host share one memory pool maintained by the first graph. When the first graph is destroyed, the memory pool is stopped, causing DMalloc to return 16847020 (HIAI_GRAPH_MEMORY_POOL_STOPPED) until the first graph is completely destroyed and the second graph becomes the first graph. It can be avoided by not destroying the first graph or by adding a retry mechanism.",
+    "expect_refusal": false,
+    "history": []
+  },
+  {
+    "id": "q12",
+    "tier": "direct",
+    "question": "What are the default memory allocations for weights and feature maps during TensorFlow training on Ascend, and which parameters adjust them?",
+    "must_contain": [
+      "5",
+      "26",
+      "graph_memory_max_size|variable_memory_max_size"
+    ],
+    "gold_docs": [
+      "TensorFlowNetworkModelPortingandTrainingGuide"
+    ],
+    "reference": "By default, 5 GB is allocated for weight memory and 26 GB is allocated for feature map memory (with a combined limit of 31 GB). They can be adjusted using variable_memory_max_size and graph_memory_max_size in NPURunConfig or session configuration.",
+    "expect_refusal": false,
+    "history": []
+  },
+  {
+    "id": "q13",
+    "tier": "direct",
+    "question": "In the TBE operator description JSON file inside kernel_meta, what do the magic values RT_DEV_BINARY_MAGIC_ELF and RT_DEV_BINARY_MAGIC_ELF_AICPU indicate?",
+    "must_contain": [
+      "ai core",
+      "ai cpu"
+    ],
+    "gold_docs": [
+      "TBECustomOperatorDevelopmentGuide_CLI_",
+      "Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000_"
+    ],
+    "reference": "In the kernel_meta JSON file, 'RT_DEV_BINARY_MAGIC_ELF' indicates that the operator running target is the AI Core (with a .o binary file suffix), whereas 'RT_DEV_BINARY_MAGIC_ELF_AICPU' indicates that the running target is the AI CPU (with a .so binary file suffix).",
+    "expect_refusal": false,
+    "history": []
+  },
+  {
+    "id": "q14",
+    "tier": "direct",
+    "question": "What are the default port numbers and initial login usernames for the Mind Studio GUI and the Profiling tool?",
+    "must_contain": [
+      "8888",
+      "8099",
+      "mindstudioadmin",
+      "msvpadmin"
+    ],
+    "gold_docs": [
+      "MindStudioInstallationGuideUbuntuX86"
+    ],
+    "reference": "For the Mind Studio GUI, the default port is 8888 and the default username is MindStudioAdmin (initial password: Huawei123@). For the Profiling GUI, the default port is 8099 and the default username is msvpadmin (initial password: Admin12#$).",
+    "expect_refusal": false,
+    "history": []
+  },
+  {
+    "id": "q15",
+    "tier": "multi",
+    "question": "How is the required output memory size calculated for a 300 x 300 YUV420SP_UV image in DVPP, and which Matrix APIs must be used to allocate and free this memory?",
+    "must_contain": [
+      "304",
+      "1.5|3/2",
+      "hiai_dvpp_dmalloc",
+      "hiai_dvpp_dfree"
+    ],
+    "gold_docs": [
+      "ApplicationDevelopmentGuide_MindStudio_",
+      "Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000_"
+    ],
+    "reference": "Due to DVPP alignment rules (width aligned to 16 pixels and height to 2 pixels), a 300 x 300 YUV420SP_UV image is rounded up to 304 x 300. Because each YUV420SP pixel requires 1.5 (3/2) bytes, the output memory size is 304 x 300 x 3/2 bytes. This memory must be allocated and freed in pairs on the device side using HIAI_DVPP_DMalloc (or HIAIMemory::HIAI_DVPP_DMalloc) and HIAI_DVPP_DFree (or HIAIMemory::HIAI_DVPP_DFree).",
+    "expect_refusal": false,
+    "history": []
+  },
+  {
+    "id": "q16",
+    "tier": "multi",
+    "question": "Which pins on the Atlas 200 DK must be connected with a jumper cap to prepare an SD card without a card reader, and what are the default IP addresses configured in make_sd_card.py for the USB NIC and network port?",
+    "must_contain": [
+      "16",
+      "18",
+      "192.168.1.2",
+      "192.168.0.2"
+    ],
+    "gold_docs": [
+      "EnvironmentDeploymentGuide",
+      "UserGuide2020",
+      "UserGuide2021"
+    ],
+    "reference": "To prepare an SD card without a card reader, place a jumper cap or jumper wire over pin 16 and pin 18 on the Atlas 200 DK while powered off. In make_sd_card.py, the default IP address for the USB virtual NIC (USB_CARD_DEFAULT_IP) is 192.168.1.2, and the default IP address for the physical NIC (NETWORK_CARD_DEFAULT_IP) is 192.168.0.2.",
+    "expect_refusal": false,
+    "history": []
+  },
+  {
+    "id": "q17",
+    "tier": "paraphrase",
+    "question": "How should VDEC engines and thread counts be configured in the graph file to decode multiple video streams concurrently without frame order issues?",
+    "must_contain": [
+      "thread_num",
+      "1",
+      "16|one engine|multiple vdec"
+    ],
+    "gold_docs": [
+      "ApplicationDevelopmentGuide_MindStudio_"
+    ],
+    "reference": "In the graph configuration file, configure multiple VDEC engines so that each video stream fixedly corresponds to one VDEC engine (up to 16 video streams per graph), and set thread_num to 1 in each VDEC engine segment so that one engine corresponds to one thread.",
+    "expect_refusal": false,
+    "history": []
+  },
+  {
+    "id": "q18",
+    "tier": "paraphrase",
+    "question": "How can I speed up slow offline model conversion when running on an Arm (AArch64) server?",
+    "must_contain": [
+      "numactl",
+      "16-31|localalloc|te_parallel_compiler"
+    ],
+    "gold_docs": [
+      "ATCToolInstructions",
+      "Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000_"
+    ],
+    "reference": "On an Arm (AArch64) development server, you can accelerate offline model conversion by installing numactl and binding CPU cores 16-31 using 'numactl -C 16-31 --localalloc <command>' (with atc or omg). In ATC, you can also enable parallel operator compilation via the TE_PARALLEL_COMPILER environment variable.",
+    "expect_refusal": false,
+    "history": []
+  },
+  {
+    "id": "q19",
+    "tier": "followup",
+    "question": "And what value indicates that it is a VD version?",
+    "must_contain": [
+      "004"
+    ],
+    "gold_docs": [
+      "EnvironmentDeploymentGuide",
+      "UserGuide2020",
+      "UserGuide2021"
+    ],
+    "reference": "When checking '/proc/cmdline' on the Atlas 200 DK, a value of boardid=004 indicates that the Atlas 200 AI accelerator module is a VD version.",
+    "expect_refusal": false,
+    "history": [
+      {
+        "role": "user",
+        "content": "How can I check if the Atlas 200 AI accelerator module is a VC or earlier version using the command line?"
+      },
+      {
+        "role": "assistant",
+        "content": "You can run 'cat /proc/cmdline' on the Atlas 200 DK and inspect the boardid parameter. A value of boardid=000 indicates a VC or earlier version."
+      }
+    ]
+  },
+  {
+    "id": "q20",
+    "tier": "none",
+    "question": "How many Tensor Cores does the Nvidia H100 Hopper GPU have?",
+    "must_contain": [],
+    "gold_docs": [],
+    "reference": "Out of domain question. The answer must state that the information is not provided in the context.",
+    "expect_refusal": true,
+    "history": []
   }
 ]
