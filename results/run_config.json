@@ -1,0 +1,17 @@
+{
+  "gen_model": "qwen2.5:7b",
+  "judge_model": "qwen2.5:7b",
+  "emb_model": "nomic-embed-text",
+  "ollama_version": "0.40.5",
+  "k": 4,
+  "n_runs": 1,
+  "seed_base": 42,
+  "gen_temp": 0.5,
+  "rewrite_temp": 0.3,
+  "n_variants": 3,
+  "rrf_c": 15,
+  "memory_distractor": true,
+  "n_chunks": 1389,
+  "n_questions": 20,
+  "date": "2026-10-17 13:44"
+}
