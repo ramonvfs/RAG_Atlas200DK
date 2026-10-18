@@ -50,18 +50,18 @@ cabeçalhos/rodapés proprietários da Huawei, reconectou termos técnicos hifen
 normalizou a notação de unidades de hardware.
 
 | Documento | Tokens | Caracteres | Status |
-|---|---:|---:|:---:|
-| ATCToolInstructions | 37.719 | 160.478 | OK |
-| ApplicationDevelopmentGuide (MindStudio) | 25.311 | 108.117 | OK |
-| Atlas 200 AI Accelerator Module App Software Dev Guide (Models 3000) | 246.233 | 1.060.979 | OK |
-| EnvironmentDeploymentGuide | 30.161 | 117.544 | OK |
-| Huawei Atlas 200 DK Technical White Paper (Model 3000) | 6.228 | 26.385 | OK |
-| MindStudio Installation Guide (Ubuntu x86) | 19.606 | 88.690 | OK |
-| TBE Custom Operator Development Guide (CLI) | 19.123 | 84.728 | OK |
-| TensorFlow Network Model Porting and Training Guide | 76.327 | 353.217 | OK |
-| UserGuide 2020 | 20.524 | 79.970 | OK |
-| UserGuide 2021 | 29.957 | 117.392 | OK |
-| **Total** | **511.189** | **2.197.500** | |
+| --- | --- | --- | --- |
+| ATCToolInstructions | 67.820 | 415.690 | OK |
+| ApplicationDevelopmentGuide_MindStudio_ | 24.627 | 127.687 | OK |
+| Atlas200AIAcceleratorModuleApplicationSoftwareDevelopmentGuide_Models3000_ | 286.523 | 1.691.982 | OK |
+| EnvironmentDeploymentGuide | 29.857 | 148.346 | OK |
+| Huawei_Atlas_200_DK_developer_kit_Technical_White_Paper__Model_3000__08 | 7.304 | 48.283 | OK |
+| MindStudioInstallationGuideUbuntuX86 | 21.276 | 134.197 | OK |
+| TBECustomOperatorDevelopmentGuide_CLI_ | 18.822 | 96.798 | OK |
+| TensorFlowNetworkModelPortingandTrainingGuide | 82.818 | 537.969 | OK |
+| UserGuide2020 | 20.056 | 96.481 | OK |
+| UserGuide2021 | 29.347 | 143.195 | OK |
+| **Total** | **588.450** | **3.440.628** |  |
 
 A contagem de tokens utiliza o tokenizador `cl100k_base` (GPT-4). O corpus é dominado
 pelo Atlas 200 Application Software Development Guide (~48% de todos os tokens), que
@@ -87,7 +87,7 @@ RAG_Atlas200DK/
 
 ## 5. Roadmap
 
-### Fase 1 -- Ingestão de Dados e Chunking (atual)
+### Fase 1 -- Ingestão de Dados e Chunking
 
 - Extração de PDF para Markdown com parsing layout-aware
 - Pipeline de pós-processamento (remoção de cabeçalhos/rodapés, reconexão de hífens, normalização de unidades)
@@ -96,21 +96,17 @@ RAG_Atlas200DK/
 - Diagnósticos de qualidade dos chunks (distribuição de tokens, auditoria de integridade de tabelas, legibilidade autônoma)
 - Seleção da configuração final de chunking e exportação dos payloads validados (JSON)
 
-### Fase 2 -- Indexacao e Baseline de Retrieval
+### Fase 2 -- Indexação e Baseline de Retrieval
 
-- Avaliação de modelos de embedding (candidatos: OpenAI `text-embedding-3-small`, alternativas open-source)
-- Configuração do vector store (FAISS ou ChromaDB)
+- Avaliação de modelos de embedding
+- Configuração do vector store (ChromaDB)
 - Baseline de retrieval denso com abordagem de query única
-- Avaliação de retrieval: precision\@k, recall\@k, MRR sobre um conjunto de perguntas curado manualmente
-- Comparação com retrieval esparso (BM25) e retrieval híbrido (fusão denso + esparso)
 
-### Fase 3 -- Experimentos com Metodos Pre-Query (contribuição principal da pesquisa)
+### Fase 3 -- Experimentos com Métodos Pre-Query (contribuição principal da pesquisa)
 
 - **Step-Back Prompting**: implementar cadeia de abstração, avaliar ganho de recall em perguntas conceituais (ex.: "Como a arquitetura DaVinci lida com operacoes matriciais?")
-- **Multi-Query / RAG-Fusion**: decomposição de query com LLM, retrieval paralelo, re-ranqueamento por Reciprocal Rank Fusion, medir ganhos de diversidade e cobertura
-- **RAG com Memoria Conversacional**: memória por janela deslizante e por sumarização, avaliar sequências de perguntas multi-turno com resolução de correferências
-- **Estratégias combinadas**: testar combinações em pares e triplas (ex.: Step-Back + RAG-Fusion, Memoria + Multi-Query)
-- Dashboard de comparação lado a lado: acurácia, taxa de alucinação, relevância de retrieval, latência
+- **Multi-Query**: decomposição de query com LLM, retrieval paralelo, re-ranqueamento por Reciprocal Rank Fusion, medir ganhos de diversidade e cobertura
+- **RAG com Memória Conversacional**: memória por janela deslizante e por sumarização, avaliar sequências de perguntas multi-turno com resolução de correferências
 
 ### Fase 4 -- Geração e Avaliação End-to-End
 
@@ -121,9 +117,9 @@ RAG_Atlas200DK/
 
 ### Fase 5 -- Documentação e Resultados
 
-- Relatório final de benchmark com comparações quantitativas entre todos os métodos pre-query
+- Benchmark com comparações quantitativas entre todos os métodos pre-query
 
-## 6. Conceitos-Chave do Dominio Ascend
+## 6. Conceitos-Chave do Domínio Ascend
 
 Para leitores não familiarizados com o ecossistema Huawei Ascend, estes são os
 componentes centrais referenciados ao longo da documentação:
@@ -144,4 +140,81 @@ componentes centrais referenciados ao longo da documentação:
 
 ## 7. Como Executar o Pipeline
 
-(Pendente)
+O projeto é dividido em dois notebooks principais que podem ser executados localmente ou no Google Colab:
+
+### 1. Extração e Particionamento (`data_chunking.ipynb`)
+
+Converte os 10 manuais em PDF (`data/raw/manuals/`) para Markdown estruturado em `data/processed/markdown/` utilizando `docling`, aplica o pós-processamento estrutural e executa o comparativo entre as três estratégias de chunking, exportando os artefatos validados (`.parquet` e `.json`) para `data/output/`.
+
+### 2. Indexação Híbrida e Benchmark Pre-Query (`notebook.ipynb`)
+
+1. **Servidor de Modelos Locais (Ollama):** instala o Ollama e realiza o pull dos modelos de embedding e geração/avaliação:
+
+```bash
+curl -fsSL https://ollama.com/install.sh | sh
+ollama serve &
+ollama pull nomic-embed-text
+ollama pull qwen2.5:7b
+
+```
+
+2. **Dependências Python:** instala os pacotes necessários para o banco vetorial, tokenização e orquestração:
+
+```bash
+pip install chromadb openai tiktoken pandas pyarrow tqdm requests langchain-text-splitters
+
+```
+
+3. **Execução do Benchmark:**
+* Particiona os 10 manuais com a **Estratégia 3 (Atomic Table-Aware)** e filtra ruídos de sumário (ToC).
+
+* Constrói o índice híbrido combinando busca densa no **ChromaDB** (`nomic-embed-text` com prefixos assimétricos `search_document:` e `search_query:`) e busca léxica em memória via **Okapi BM25**, fundidos por Reciprocal Rank Fusion (RRF).
+
+* Avalia as 20 questões técnicas (`results/questions.json`) nas variantes `baseline`, `stepback`, `multiquery`, `memory` e `combined` usando **LLM-as-a-Judge** (`qwen2.5:7b`, `temperature=0`) e exporta as métricas detalhadas em `results/`.
+
+---
+
+## 8. Resultados
+
+### 8.1 Comparação das Estratégias de Chunking
+
+A avaliação em amostra diagnóstica demonstrou que estratégias convencionais fragmentam tabelas de especificação, enquanto o particionamento atômico preserva a integridade estrutural:
+
+| Estratégia | Chunks | Min (tokens) | Max (tokens) | Média (tokens) | Mediana (tokens) | Tabelas Preservadas |
+| --- | --- | --- | --- | --- | --- | --- |
+| `1_recursive` | 87 | 102 | 1.011 | 837 | 925 | 0 |
+| `2_markdown_header` | 121 | 2 | 1.008 | 576 | 702 | 0 |
+| `3_atomic_table_aware` | 245 | 22 | 4.415 | 325 | 102 | 33 |
+
+Aplicada aos 10 manuais completos, a **`3_atomic_table_aware`** gerou **3.762 chunks brutos** e, após a filtragem automática de 35 chunks de sumário (ToC), consolidou **3.727 chunks finais** (sendo **704 chunks de tabelas intactas**, ou **18,9%** do índice) enriquecidos com *breadcrumbs* hierárquicos (`[Doc: <doc> > <secao>]`).
+
+### 8.2 Configuração Experimental e Hiperparâmetros
+
+Os experimentos finais de avaliação foram executados sobre uma suíte de **20 perguntas técnicas** distribuídas em 5 categorias (`direct`, `multi`, `paraphrase`, `followup` e `none` para recusa fora do domínio) com a seguinte configuração:
+
+```python
+GEN_MODEL         = "qwen2.5:7b"        # modelo gerador
+JUDGE_MODEL       = "qwen2.5:7b"        # modelo avaliador (LLM-as-a-Judge, temp=0)
+EMB_MODEL         = "nomic-embed-text"  # embeddings densos + BM25 (15.015 termos)
+K                 = 4                   # chunks entregues ao gerador
+N_RUNS            = 1                   # execucoes por variante
+SEED_BASE         = 42                  # seed para reprodutibilidade
+GEN_TEMP          = 0.5                 # temperatura da resposta final
+REWRITE_TEMP      = 0.3                 # temperatura das chamadas de reescrita
+N_VARIANTS        = 3                   # reformulacoes no Multi-Query
+RRF_C             = 15                  # constante do Reciprocal Rank Fusion
+MEMORY_DISTRACTOR = True                # injecao de historico distrator na variante memory
+
+```
+
+### 8.3 Desempenho das Variantes Pre-Query
+
+Comparativo entre a fase preliminar (dados sintéticos) e o benchmark final sobre o corpus real após ajuste de hiperparâmetros e adição da variante combinada:
+
+| Variante | Acurácia (Sintético) | LLM Calls | Tempo (Sintético) | Acurácia (Corpus Real) | LLM Calls | Tempo (Corpus Real) |
+| --- | --- | --- | --- | --- | --- | --- |
+| **baseline** | 70% | 1,0 | 15s | 80% (16/20) | 1,0 | 54s |
+| **stepback** | 75% | 2,0 | 22s | 70% (14/20) | 2,0 | 49s |
+| **multiquery** | 75% | 2,0 | 43s | 75% (15/20) | 2,0 | 58s |
+| **memory** | 75% | 2,0 | 24s | 75% (15/20) | 2,0 | 51s |
+| **combined** | -- | -- | -- | **90% (18/20)** | 3,1 | 57s |
